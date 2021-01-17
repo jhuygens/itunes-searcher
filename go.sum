@@ -1,0 +1,10 @@
+github.com/jgolang/config v1.0.0 h1:82b+PKhukzD3QXubdwO5kzEg+maC0IpCM22aJJfunXo=
+github.com/jgolang/config v1.0.0/go.mod h1:dk4Mr3XN9DO82mr9PrvBxBTpWhb+ii3kOTwEZsYcDUU=
+github.com/jgolang/consumer v0.0.0-20210117082433-b0f7632a8a75 h1:KgCz/AdvyGn3kpzFOTN8T2tGp9g8clV88C28VgFrEGo=
+github.com/jgolang/consumer v0.0.0-20210117082433-b0f7632a8a75/go.mod h1:0VAGznCERBlFDfgFZDUOLm081E8iy1Wlqshgjoy34N4=
+github.com/jgolang/sirius v1.0.0 h1:rT1kSU4Ja5F4VPj1eg0qxaDWA2HxhZEKi9N+cVNfKBU=
+github.com/jgolang/sirius v1.0.0/go.mod h1:SPDEBWiXCgxbcTKXYrFMR6Zovk9QVqA5qfsyGwYQJw0=
+github.com/jhuygens/cache v0.0.0-20210117053223-7de147b2a817 h1:+V3+seqnr9xBSBvyWc48iHcCDzMWB715wHJBeA+G7bU=
+github.com/jhuygens/cache v0.0.0-20210117053223-7de147b2a817/go.mod h1:p5bR1xAJgE9sbH6fQnOeiECEXJjpXnHghp9CozQlM/4=
+github.com/jhuygens/searcher-engine v0.0.0-20210117053827-e15563159b1c h1:mIHO75ygERQHLfX76vlYXIDjQZomi+Lxu7iG6HP+jIw=
+github.com/jhuygens/searcher-engine v0.0.0-20210117053827-e15563159b1c/go.mod h1:ci6+st/fb11ZXsB+8X4oIz3mpdBhL+jbUvxL3vDuGhw=
