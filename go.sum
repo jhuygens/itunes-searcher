@@ -8,5 +8,5 @@ github.com/jgolang/sirius v1.0.0 h1:rT1kSU4Ja5F4VPj1eg0qxaDWA2HxhZEKi9N+cVNfKBU=
 github.com/jgolang/sirius v1.0.0/go.mod h1:SPDEBWiXCgxbcTKXYrFMR6Zovk9QVqA5qfsyGwYQJw0=
 github.com/jhuygens/cache v0.0.0-20210117053223-7de147b2a817 h1:+V3+seqnr9xBSBvyWc48iHcCDzMWB715wHJBeA+G7bU=
 github.com/jhuygens/cache v0.0.0-20210117053223-7de147b2a817/go.mod h1:p5bR1xAJgE9sbH6fQnOeiECEXJjpXnHghp9CozQlM/4=
-github.com/jhuygens/searcher-engine v0.0.0-20210118020250-683227f25c0c h1:4wx3k68g+DyxTsOrlTippHOOM8v2XbHEAHLBXZL8WgA=
-github.com/jhuygens/searcher-engine v0.0.0-20210118020250-683227f25c0c/go.mod h1:ci6+st/fb11ZXsB+8X4oIz3mpdBhL+jbUvxL3vDuGhw=
+github.com/jhuygens/searcher-engine v0.0.0-20210118022047-f69a8886e2d8 h1:/V1d1SJZHSQmXliIGBT7JBL99+QBez8MUxMffCiTNAA=
+github.com/jhuygens/searcher-engine v0.0.0-20210118022047-f69a8886e2d8/go.mod h1:ci6+st/fb11ZXsB+8X4oIz3mpdBhL+jbUvxL3vDuGhw=
