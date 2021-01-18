@@ -15,7 +15,7 @@ import (
 type Searcher struct{}
 
 // Limit returns limit
-var Limit = "10"
+var Limit = "20"
 
 // Search doc ...
 func (s Searcher) Search(filter searcher.Filter) ([]searcher.Item, error) {
@@ -64,7 +64,7 @@ func searchItunesServiceItems(q map[string]string) ([]searcher.Item, error) {
 			items,
 			searcher.Item{
 				Type:    result.Kind,
-				Library: config.GetString("searchers.itunes"),
+				Library: config.GetString("searchers[0].name"),
 				Name:    result.TrackName,
 				Artwork: result.ArtworkURL100,
 				Info: searcher.Info{

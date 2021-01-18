@@ -1,6 +1,8 @@
 package itunes
 
 import (
+	"log"
+
 	"github.com/jgolang/config"
 	searcher "github.com/jhuygens/searcher-engine"
 )
@@ -8,5 +10,9 @@ import (
 var itunesSearcher = Searcher{}
 
 func init() {
-	searcher.RegisterSearcher(config.GetString("searchers.itunes"), itunesSearcher)
+	err := searcher.RegisterSearcher(config.GetString("searchers[0].name"), itunesSearcher)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 }

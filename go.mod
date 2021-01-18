@@ -6,5 +6,5 @@ require (
 	github.com/jgolang/config v1.0.0
 	github.com/jgolang/consumer v0.0.0-20210117105811-036781e4b857
 	github.com/jgolang/log v1.2.4
-	github.com/jhuygens/searcher-engine v0.0.0-20210117053827-e15563159b1c
+	github.com/jhuygens/searcher-engine v0.0.0-20210118003147-aa8546ff7214
 )
