@@ -31,15 +31,15 @@ func (s Searcher) Search(filter searcher.Filter) ([]searcher.Item, error) {
 		for _, name := range filter.Name {
 			items = append(items, searchByName(name.Value, country, resource, Limit)...)
 		}
+		if len(filter.Name) == 0 {
+			for _, artist := range filter.Artist {
+				items = append(items, searchByName(artist.Value, country, "artist", Limit)...)
+			}
+			for _, album := range filter.Album {
+				items = append(items, searchByName(album.Value, country, "album", Limit)...)
+			}
+		}
 	}
-	// No aplica el flitro
-	// for _, artist := range filter.Artist {
-	// 	items = append(items, searchByName(artist.Value, country, "artist", Limit)...)
-	// }
-	// for _, album := range filter.Album {
-	// 	items = append(items, searchByName(album.Value, country, "album", Limit)...)
-	// }
-
 	return items, nil
 }
 
@@ -64,10 +64,26 @@ func searchItunesServiceItems(q map[string]string) ([]searcher.Item, error) {
 			items,
 			searcher.Item{
 				Type:    result.Kind,
-				Library: "itunes",
+				Library: config.GetString("searchers.itunes"),
 				Name:    result.TrackName,
 				Artwork: result.ArtworkURL100,
-				// Info:    result,
+				Info: searcher.Info{
+					PreviewURL: result.PreviewURL,
+					Title:      result.TrackName,
+					Collection: result.CollectionName,
+					Artist:     result.ArtistName,
+					Languages:  nil,
+					// RatingAvg:   result.ContentAdvisoryRating,
+					Genres:      []string{result.PrimaryGenreName},
+					Description: result.ShortDescription,
+					MoreInfo:    result.LongDescription,
+					ReleaseDate: result.ReleaseDate,
+					Country:     result.Country,
+					Price:       result.TrackPrice,
+					RentalPrice: result.TrackHdRentalPrice,
+					Currency:    result.Currency,
+					URL:         result.TrackViewURL,
+				},
 			},
 		)
 	}
@@ -81,7 +97,7 @@ func searchByName(term, country, resource, limit string) []searcher.Item {
 	query["country"] = country
 	query["limit"] = limit
 	query["media"] = media
-	query["entity"] = mediaTypeEntities[media][resource]
+	// query["entity"] = mediaTypeEntities[media][resource]
 	query["attribute"] = mediaTypeAtributes[media][resource]
 	result, err := searchItunesServiceItems(query)
 	if err != nil {
