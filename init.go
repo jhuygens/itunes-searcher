@@ -10,7 +10,7 @@ import (
 var itunesSearcher = Searcher{}
 
 func init() {
-	err := searcher.RegisterSearcher(config.GetString("searchers[0].name"), itunesSearcher)
+	err := searcher.RegisterSearcher(config.GetString("searchers.itunes"), itunesSearcher)
 	if err != nil {
 		log.Fatal(err)
 		return

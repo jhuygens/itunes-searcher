@@ -3,6 +3,7 @@ package itunes
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/jgolang/config"
@@ -11,11 +12,11 @@ import (
 	searcher "github.com/jhuygens/searcher-engine"
 )
 
-// Searcher searcher interface implement
-type Searcher struct{}
-
 // Limit returns limit
 var Limit = "20"
+
+// Searcher searcher interface implement
+type Searcher struct{}
 
 // Search doc ...
 func (s Searcher) Search(filter searcher.Filter) ([]searcher.Item, error) {
@@ -43,12 +44,30 @@ func (s Searcher) Search(filter searcher.Filter) ([]searcher.Item, error) {
 	return items, nil
 }
 
-func searchItunesServiceItems(q map[string]string) ([]searcher.Item, error) {
+func searchByName(term, country, resource, limit string) []searcher.Item {
+	media := media[resource]
+	queryParams := make(map[string]string)
+	queryParams["term"] = term
+	queryParams["country"] = country
+	queryParams["limit"] = limit
+	queryParams["media"] = media
+	// queryParams["entity"] = mediaTypeEntities[media][resource]
+	queryParams["attribute"] = mediaTypeAtributes[media][resource]
+	result, err := searchItunesServiceItems(queryParams)
+	if err != nil {
+		log.Error(err)
+	}
+	var items []searcher.Item
+	items = append(items, result...)
+	return items
+}
+
+func searchItunesServiceItems(queryParams map[string]string) ([]searcher.Item, error) {
 	resquest := rest.RequestInfo{
 		Method:      http.MethodGet,
 		Endpoint:    config.GetString("integrations.itunes.endpoint"),
 		Timeout:     time.Duration(config.GetInt("integrations.itunes.timeout")) * time.Second,
-		QueryParams: q,
+		QueryParams: queryParams,
 	}
 	var responseData ResponseData
 	response, err := rest.ConsumeRestService(resquest, &responseData)
@@ -60,20 +79,21 @@ func searchItunesServiceItems(q map[string]string) ([]searcher.Item, error) {
 	}
 	var items []searcher.Item
 	for _, result := range responseData.Results {
+		ratingAvg, _ := strconv.ParseFloat(result.ContentAdvisoryRating, 64)
 		items = append(
 			items,
 			searcher.Item{
 				Type:    result.Kind,
-				Library: config.GetString("searchers[0].name"),
+				Library: config.GetString("searchers.itunes"),
 				Name:    result.TrackName,
 				Artwork: result.ArtworkURL100,
 				Info: searcher.Info{
-					PreviewURL: result.PreviewURL,
-					Title:      result.TrackName,
-					Collection: result.CollectionName,
-					Artist:     result.ArtistName,
-					Languages:  nil,
-					// RatingAvg:   result.ContentAdvisoryRating,
+					PreviewURL:  result.PreviewURL,
+					Title:       result.TrackName,
+					Collection:  result.CollectionName,
+					Artist:      result.ArtistName,
+					Languages:   nil,
+					RatingAvg:   ratingAvg,
 					Genres:      []string{result.PrimaryGenreName},
 					Description: result.ShortDescription,
 					MoreInfo:    result.LongDescription,
@@ -88,110 +108,4 @@ func searchItunesServiceItems(q map[string]string) ([]searcher.Item, error) {
 		)
 	}
 	return items, nil
-}
-
-func searchByName(term, country, resource, limit string) []searcher.Item {
-	media := media[resource]
-	query := make(map[string]string)
-	query["term"] = term
-	query["country"] = country
-	query["limit"] = limit
-	query["media"] = media
-	// query["entity"] = mediaTypeEntities[media][resource]
-	query["attribute"] = mediaTypeAtributes[media][resource]
-	result, err := searchItunesServiceItems(query)
-	if err != nil {
-		log.Error(err)
-	}
-	var items []searcher.Item
-	items = append(items, result...)
-	return items
-}
-
-var media = map[string]string{
-	"album":  "music",
-	"artist": "music",
-	// "playlist": "", // N/A
-	"track":   "music",
-	"show":    "tvShow",
-	"movie":   "movie",
-	"podcast": "podcast",
-	// "people":  "", // N/A
-	"episode": "tvShow",
-}
-
-var mediaTypeAtributes = map[string]map[string]string{
-	"music":   musicAttributes,
-	"movie":   movieAttributes,
-	"podcast": podcastAttributes,
-	"tvShow":  tvShowAttributes,
-}
-
-var movieAttributes = map[string]string{
-	"artist":  "artistTerm",
-	"track":   "shortFilmTerm",
-	"movie":   "movieTerm",
-	"people":  "actorTerm",
-	"episode": "shortFilmTerm",
-}
-
-var musicAttributes = map[string]string{
-	"album":  "albumTerm",
-	"artist": "artistTerm",
-	"track":  "songTerm",
-	"people": "composerTerm",
-}
-
-var podcastAttributes = map[string]string{
-	"album":   "keywordsTerm",
-	"artist":  "artistTerm",
-	"podcast": "titleTerm",
-	"people":  "authorTerm",
-}
-
-var tvShowAttributes = map[string]string{
-	"album":    "tvSeasonTerm",
-	"playlist": "tvSeasonTerm",
-	"track":    "tvEpisodeTerm",
-	"show":     "showTerm",
-	"movie":    "movieTerm",
-	"episode":  "tvEpisodeTerm",
-}
-
-var mediaTypeEntities = map[string]map[string]string{
-	"music":   musicEntities,
-	"movie":   movieEntities,
-	"podcast": podcastEntities,
-	"tvShow":  tvShowEntities,
-}
-
-var musicEntities = map[string]string{
-	"album":  "album",
-	"artist": "musicArtist",
-	"track":  "song",
-	"people": "musicArtist",
-}
-
-var movieEntities = map[string]string{
-	"artist":  "movieArtist",
-	"track":   "movie",
-	"movie":   "movie",
-	"people":  "movieArtist",
-	"episode": "movie",
-}
-
-var podcastEntities = map[string]string{
-	"album":   "podcast",
-	"artist":  "podcastAuthor",
-	"podcast": "podcast",
-	"people":  "podcastAuthor",
-}
-
-var tvShowEntities = map[string]string{
-	"album":    "tvSeason",
-	"playlist": "tvSeason",
-	"track":    "tvEpisode",
-	"show":     "tvEpisode",
-	"movie":    "tvEpisode",
-	"episode":  "tvEpisode",
 }
